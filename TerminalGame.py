@@ -50,6 +50,7 @@ class Grid:
         self.size = size
         self.grid = [Cell(0, self.size) for i in range(self.size*self.size)]
         self.difficulty = difficulty
+        self.number_of_mines = 0
         Grid.setup(self)
 
     def __repr__(self):
@@ -70,10 +71,10 @@ class Grid:
 
     def setup(self):
         #bomb creation
-        number_of_mines = math.ceil(len(self.grid) * (self.difficulty)/10)
+        self.number_of_mines = math.ceil(len(self.grid) * (self.difficulty)/10)
         bomb_coordinates = []
 
-        for i in range(number_of_mines):
+        for i in range(self.number_of_mines):
             x = r.choice(alpha[:self.size])
             y = r.randint(1, self.size)
             while (x,y) in bomb_coordinates:
@@ -172,7 +173,7 @@ class Grid:
             for neighbour in neighbouring_cells:
                 cell.count += neighbour.state
 
-            print(cell.count)
+            #print(cell.count)
 
 class Game:
     playing = True
@@ -182,6 +183,7 @@ class Game:
         self.size = int(input("Enter your desired grid size: "))
         self.difficulty = int(input("Enter desired difficulty, from 1 to 3: "))
         self.grid = Grid(self.size, self.difficulty)
+        self.cells = self.size*self.size
         Game.play(self)
 
     def play(self):
@@ -209,7 +211,13 @@ class Game:
                 if cell.status == 't':
                     print("You have triggered a mine. Game over.")
                     self.playing = False
-                
+                elif cell.status == 'o':
+                    self.cells -= 1
+                    if self.cells - self.grid.number_of_mines == 0:
+                        Game.winSequence()
                 break
+
+    def winSequence(self):
+        pass
 
 game = Game()
