@@ -80,6 +80,14 @@ class Game:
     def play(self):
         print(self.grid)
         while(self.playing):
-            x = input()
-            
+            x = input("PLAYER MOVE: ")
+            for cell in self.grid.grid:
+                if cell.coordinates == x:
+                    pass
+            if x == "exit":
+                return
+            if x == "print":
+                print(self.grid)
+
+
 game = Game()
