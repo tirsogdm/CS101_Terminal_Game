@@ -37,13 +37,17 @@ class Cell():
             return "|b|"
 
     def analyse(self, id):
+        print("state: " + str(self.state))
         if id == 'o':
             if self.state == 1:
-                self.status == 't'
+                self.status = 't'
+                print("status: " + self.status)
+                return
             self.status = id
 
         elif id == 'f':
             self.status = id
+        print("status: " + self.status)
 
 class Grid:
     def __init__(self, size, difficulty):
@@ -211,13 +215,14 @@ class Game:
                 if cell.status == 't':
                     print("You have triggered a mine. Game over.")
                     self.playing = False
-                elif cell.status == 'o':
+                if cell.status == 'o':
                     self.cells -= 1
                     if self.cells - self.grid.number_of_mines == 0:
-                        Game.winSequence()
-                break
+                        self.winSequence()
+                        return
 
     def winSequence(self):
-        pass
+        print("You win!!!")
+        self.playing = False
 
 game = Game()
