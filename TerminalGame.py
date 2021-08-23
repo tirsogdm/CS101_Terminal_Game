@@ -37,20 +37,16 @@ class Cell():
             return "|b|"
 
     def analyse(self, id):
-        print("prev status: " + str(self.status))
         if self.status == 'o' or self.status == 'f':
             return
         else:
-            print("  state: " + str(self.state))
             if id == 'o':
                 if self.state == 1:
                     self.status = 't'
                 else:
                     self.status = id
-
             elif id == 'f':
                 self.status = id
-            print("    status: " + self.status)
 
 class Grid:
     def __init__(self, size, difficulty):
@@ -93,9 +89,10 @@ class Grid:
             if cell.coordinates in bomb_coordinates:
                 cell.state = 1
 
-        print(bomb_coordinates)
+        print("\nThere are " + str(self.number_of_mines) + " mines. Good luck!\n")
+        #print(bomb_coordinates)
 
-        #bomb count
+        #neighbouring bomb count
         for i, cell in enumerate(self.grid):
 
             neighbouring_cells = []
@@ -199,7 +196,7 @@ class Game:
 
         print(welcome_message)
         self.size = int(input("Enter your desired grid size: "))
-        self.difficulty = int(input("Enter desired difficulty, from 1 to 3: "))
+        self.difficulty = int(input("\nEnter desired difficulty, from 1 to 3: "))
         self.grid = Grid(self.size, self.difficulty)
         self.cells = self.size*self.size
         Game.play(self)
@@ -208,6 +205,7 @@ class Game:
         while self.playing:
             print(self.grid)
             x = input("print or exit or o/f(x,y): ")
+            print("")
             #for i, letter in enumerate(x):
             #    print("index = ", i, ", element = ", letter)
 
@@ -215,7 +213,7 @@ class Game:
                 print(self.grid)
                 continue
             elif x == "exit":
-                print("Exited game.")
+                print("---------------------------------------------- Exited game. ----------------------------------------------\n")
                 return
 
             #Add error handling
@@ -232,7 +230,6 @@ class Game:
                             self.playing = False
                         elif cell.status == 'o':
                             self.cells -= 1
-                            print(self.cells)
                             if self.cells - self.grid.number_of_mines == 0:
                                 self.end('w')
                         break
@@ -248,9 +245,9 @@ class Game:
         print(self.grid)
 
         if char == 'w':
-            print("You win! All mines found.")
+            print("---------------------------------------------- You win! All mines found. ----------------------------------------------\n")
         elif char == "l":
-            print("You have triggered a mine. Game over.")
+            print("---------------------------------------------- You have triggered a mine. Game over. ----------------------------------------------\n")
 
         self.playing = False
 
