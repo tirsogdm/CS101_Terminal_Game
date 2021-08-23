@@ -37,17 +37,20 @@ class Cell():
             return "|b|"
 
     def analyse(self, id):
-        print("state: " + str(self.state))
-        if id == 'o':
-            if self.state == 1:
-                self.status = 't'
-                print("status: " + self.status)
-                return
-            self.status = id
+        print("prev status: " + str(self.status))
+        if self.status == 'o' or self.status == 'f':
+            return
+        else:
+            print("  state: " + str(self.state))
+            if id == 'o':
+                if self.state == 1:
+                    self.status = 't'
+                else:
+                    self.status = id
 
-        elif id == 'f':
-            self.status = id
-        print("status: " + self.status)
+            elif id == 'f':
+                self.status = id
+            print("    status: " + self.status)
 
 class Grid:
     def __init__(self, size, difficulty):
@@ -191,8 +194,8 @@ class Game:
         Game.play(self)
 
     def play(self):
-        print(self.grid)
         while self.playing:
+            print(self.grid)
             x = input("print or exit or o/f(x,y): ")
             #for i, letter in enumerate(x):
             #    print("index = ", i, ", element = ", letter)
@@ -204,22 +207,24 @@ class Game:
                 print("Exited game.")
                 return
 
+            #Add error handling
             action = x[0]
             x_cor = str(x[2])
             y_cor = int(x[4])
 
             for cell in self.grid.grid:
                 if cell.coordinates[0] == x_cor and cell.coordinates[1] == y_cor:
-                    cell.analyse(action)
-                    print(self.grid)
-                if cell.status == 't':
-                    print("You have triggered a mine. Game over.")
-                    self.playing = False
-                if cell.status == 'o':
-                    self.cells -= 1
-                    if self.cells - self.grid.number_of_mines == 0:
-                        self.winSequence()
-                        return
+                    if cell.status == 'n':
+                        cell.analyse(action)
+                        if cell.status == 't':
+                            print("You have triggered a mine. Game over.")
+                            self.playing = False
+                        elif cell.status == 'o':
+                            self.cells -= 1
+                            print(self.cells)
+                            if self.cells - self.grid.number_of_mines == 0:
+                                self.winSequence()
+                        break
 
     def winSequence(self):
         print("You win!!!")
