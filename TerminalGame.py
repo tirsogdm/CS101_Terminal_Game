@@ -186,7 +186,18 @@ class Game:
     playing = True
 
     def __init__(self):
-        print("Welcome to Minesweeper!")
+
+        welcome_message = """
+        --------------------------------------------------------------------------------------------
+        --------------------------------------------------------------------------------------------
+        --------------------------------------------------------------------------------------------\n
+                                        Welcome to Minesweeper!\n
+        --------------------------------------------------------------------------------------------
+        --------------------------------------------------------------------------------------------
+        --------------------------------------------------------------------------------------------
+        """
+
+        print(welcome_message)
         self.size = int(input("Enter your desired grid size: "))
         self.difficulty = int(input("Enter desired difficulty, from 1 to 3: "))
         self.grid = Grid(self.size, self.difficulty)
@@ -217,17 +228,30 @@ class Game:
                     if cell.status == 'n':
                         cell.analyse(action)
                         if cell.status == 't':
-                            print("You have triggered a mine. Game over.")
+                            self.end('l')
                             self.playing = False
                         elif cell.status == 'o':
                             self.cells -= 1
                             print(self.cells)
                             if self.cells - self.grid.number_of_mines == 0:
-                                self.winSequence()
+                                self.end('w')
                         break
 
-    def winSequence(self):
-        print("You win!!!")
+    def end(self, char):
+        for cell in self.grid.grid:
+            if cell.state == 0:
+                cell.status = 'o'
+
+            else:
+                cell.status = 't'
+
+        print(self.grid)
+
+        if char == 'w':
+            print("You win! All mines found.")
+        elif char == "l":
+            print("You have triggered a mine. Game over.")
+
         self.playing = False
 
 game = Game()
